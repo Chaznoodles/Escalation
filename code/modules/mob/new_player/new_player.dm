@@ -67,7 +67,7 @@
 
 	out += "<center>"
 
-	for(var/datum/army_faction/T in ticker.mode.teams)
+	for(var/datum/army_faction/T in all_army_in_game)
 		if(team && team == T)
 			out += "[T.name]  "
 
@@ -76,7 +76,7 @@
 
 	out += "<br/>"
 
-	for(var/datum/army_faction/N in ticker.mode.neutral_teams)
+	/*for(var/datum/army_faction/N in ticker.mode.neutral_teams)
 
 		if(team && team == N)
 			out += "[N.name]  "
@@ -84,7 +84,7 @@
 		else
 			out += "<a href='byond://?src=\ref[src];set_team=[N.team_num]'>[N.name]</A>  "
 
-	out += "</center>"
+	out += "</center>"*/
 
 	if(team)
 		var/slot_index = 0
@@ -184,12 +184,11 @@
 		if(ticker.current_state == GAME_STATE_PREGAME && ticker.mode)
 			stat("Time To Start:", "[ticker.pregame_timeleft][round_progressing ? "" : " (DELAYED)"]")
 			if(istype(ticker.mode, /datum/game_mode/wargames)) //our cold war base gametype
-				var/datum/game_mode/wargames/W = ticker.mode
+				//var/datum/game_mode/wargames/W = ticker.mode
 				stat("Teams Selected: ")
-				for(var/datum/army_faction/T in W.teams)
-					if(T) stat("[T.name]")
-				for(var/datum/army_faction/N in W.neutral_teams)
-					if(N) stat("[N.name]")
+				for(var/datum/army_faction/T in all_army_in_game)
+					if(T)
+						stat("[T.name]")
 
 /mob/new_player/Topic(href, href_list[])
 	if(!client)	return 0
@@ -389,7 +388,7 @@
 		var/datum/game_mode/wargames/W = ticker.mode
 
 		if(istype(W))
-			if(W.teams.len < W.minimum_teams)
+			if(all_army_in_game.len < W.minimum_teams)
 				to_chat(src,"<span class='warning'>Be patient, the teams have not been selected.</span>")
 				return
 
